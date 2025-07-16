@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日常健身计划生成器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: orange;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>日常健身计划生成器</h1>
+    <textarea id="input" placeholder="目标、器材、时间，格式示例：增强柔韧性，瑜伽垫、拉伸带，45分钟"></textarea>
+    <button onclick="generatePlan()">生成</button>
+    <div id="result"></div>
+
+    <script>
+        function generatePlan() {
+            const input = document.getElementById('input').value;
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '正在生成健身计划，请稍候...';
+
+            const botId = '7525358538697523210';
+            const token = 'pat_Vx5drylIiZLMfmbOBkb7XXnTggVYNVu33MHU9kKNehcN6igzhHJeN0Jq_uKxCN7oB';
+
+            const data = {
+                "messages": [
+                    {
+                        "role": "user",
+                        "content": input
+                    }
+                ]
+            };
+
+            fetch(`https://api.coze.ai/v1/bots/${botId}/chat`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(data)
+            })
+              .then(response => response.json())
+              .then(data => {
+                    resultDiv.innerHTML = data.messages[0].content;
+                })
+              .catch(error => {
+                    resultDiv.innerHTML = '生成计划时出现错误，请稍后重试。';
+                    console.error('Error:', error);
+                });
+        }
+    </script>
+</body>
+
+</html>
